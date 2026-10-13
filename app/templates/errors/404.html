@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - KMIE{% endblock %}
+
+{% block content %}
+<div class="page-container error-page">
+    <div class="card error-card">
+        <div class="error-code">404</div>
+        <h1 class="error-title">Page Not Found</h1>
+        <p class="error-desc">The page or resource you requested could not be located. It may have been moved or the URL might be invalid.</p>
+        <div class="error-actions">
+            <a href="{{ url_for('public.index') }}" class="btn btn-primary">Return to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

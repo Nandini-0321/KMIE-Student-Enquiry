@@ -1,0 +1,16 @@
+flask>=3.0.0
+flask-wtf>=1.2.1
+wtforms>=3.1.2
+phonenumbers>=8.13.0
+email-validator>=2.1.0
+supabase>=2.3.0
+gspread>=6.0.0
+google-auth>=2.27.0
+python-dotenv>=1.0.0
+pytz>=2024.1
+pytest>=8.0.0
+pytest-mock>=3.12.0
+werkzeug>=3.0.0
+itsdangerous>=2.1.2
+requests>=2.31.0
+gunicorn>=21.2.0; sys_platform != 'win32'

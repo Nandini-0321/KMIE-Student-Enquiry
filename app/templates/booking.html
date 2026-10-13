@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}Book Demo Class - KMIE{% endblock %}
+
+{% block content %}
+<div class="page-container booking-page">
+    <div class="booking-card-wrapper">
+        <div class="card booking-form-card">
+            <div class="booking-header">
+                <span class="badge-pill">Step 2 of 2: Appointment</span>
+                <h1 class="card-title">Schedule Your Live Demo Session</h1>
+                <p class="card-subtitle">
+                    Select your preferred date and session time slot for <strong>{{ lead.student_name }}</strong>.
+                </p>
+            </div>
+
+            {% if existing_booking %}
+                <div class="info-banner">
+                    <div class="info-banner-icon">&#9432;</div>
+                    <div class="info-banner-text">
+                        <strong>Current Booking Active:</strong> You currently have a demo slot reserved on 
+                        <span class="highlight-text">{{ existing_booking.demo_date }}</span> at 
+                        <span class="highlight-text">{{ slot_labels.get(existing_booking.slot_time, existing_booking.slot_time) }}</span>.
+                        Submitting a new selection below will <em>reschedule</em> your existing booking.
+                    </div>
+                </div>
+
+                {% if booking_meeting_url %}
+                    <div class="card existing-booking-card-mini">
+                        <div class="meeting-callout-header">
+                            <span class="meeting-icon">&#127916;</span>
+                            <div>
+                                <h3 class="meeting-heading">Your Active Demo Session Link</h3>
+                                <p class="meeting-sub">You can join using this link at your scheduled time or pick a new slot below to reschedule.</p>
+                            </div>
+                        </div>
+                        <div class="meeting-input-row">
+                            <input type="text" readonly value="{{ booking_meeting_url }}" class="form-control meeting-url-input" id="active-booking-meeting-url">
+                            <a href="{{ booking_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-current-meeting">
+                                Join Meeting &rarr;
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <form action="{{ url_for('booking.confirm_booking') }}" method="POST" id="booking-form" class="booking-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="token" value="{{ token }}">
+
+                <!-- Date Selection -->
+                <div class="form-group">
+                    <label for="demo_date" class="form-label">
+                        Select Demo Date <span class="required-star">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        name="demo_date" 
+                        id="demo_date" 
+                        class="form-control" 
+                        min="{{ min_date }}" 
+                        value="{{ existing_booking.demo_date if existing_booking else min_date }}"
+                        required
+                    >
+                    <span class="form-hint">All dates are scheduled according to India Standard Time (IST). Past dates are disabled.</span>
+                </div>
+
+                <!-- Time Slot Selection -->
+                <div class="form-group">
+                    <label class="form-label">
+                        Select Demo Time Slot <span class="required-star">*</span>
+                    </label>
+                    <div class="slot-grid">
+                        {% for slot in slot_times %}
+                            <label class="slot-card {% if (existing_booking and existing_booking.slot_time == slot) or (not existing_booking and loop.first) %}active{% endif %}">
+                                <input 
+                                    type="radio" 
+                                    name="slot_time" 
+                                    value="{{ slot }}" 
+                                    class="slot-radio"
+                                    {% if (existing_booking and existing_booking.slot_time == slot) or (not existing_booking and loop.first) %}checked{% endif %}
+                                    required
+                                >
+                                <span class="slot-card-inner">
+                                    <span class="slot-time-text">{{ slot_labels.get(slot, slot) }}</span>
+                                    <span class="slot-24h">Slot code: {{ slot }}</span>
+                                </span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Booking Action Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-confirm-booking">
+                        <span class="btn-text">
+                            {% if existing_booking %}Reschedule Demo Slot{% else %}Confirm Demo Class Booking{% endif %}
+                        </span>
+                        <span class="spinner" style="display:none;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Guidance note -->
+        <div class="booking-footer-note">
+            <p>Need to modify your appointment later? You can return to this page anytime using your booking link or contact KMIE administration.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

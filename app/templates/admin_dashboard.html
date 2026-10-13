@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+
+{% block title %}KMIE Administrator Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-container admin-dashboard">
+    <!-- Dashboard Top Bar -->
+    <div class="dashboard-topbar">
+        <div>
+            <h1 class="dashboard-title">Admissions &amp; Bookings Management</h1>
+            <p class="dashboard-subtitle">Monitor student enquiries, schedule demo appointments, and synchronize with Google Sheets.</p>
+        </div>
+        <div class="dashboard-actions">
+            <form action="{{ url_for('admin.retry_all_pending_sync') }}" method="POST" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button type="submit" class="btn btn-outline" id="btn-retry-all-sync" {% if metrics.pending_sync_count == 0 %}disabled{% endif %}>
+                    &#8635; Retry All Pending Syncs ({{ metrics.pending_sync_count }})
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Summary Metrics Grid -->
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="metric-icon">&#128101;</div>
+            <div class="metric-content">
+                <span class="metric-value">{{ metrics.total_leads }}</span>
+                <span class="metric-label">Total Student Leads</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon">&#128197;</div>
+            <div class="metric-content">
+                <span class="metric-value">{{ metrics.total_bookings }}</span>
+                <span class="metric-label">Total Demo Bookings</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon metric-icon-green">&#9989;</div>
+            <div class="metric-content">
+                <span class="metric-value">{{ metrics.attended_bookings }}</span>
+                <span class="metric-label">Attended Demos</span>
+            </div>
+        </div>
+
+        <div class="metric-card">
+            <div class="metric-icon metric-icon-amber">&#9203;</div>
+            <div class="metric-content">
+                <span class="metric-value">{{ metrics.pending_sync_count }}</span>
+                <span class="metric-label">Pending Sheet Syncs</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Demo Class Session Meeting URL Configuration Card -->
+    <div class="card demo-link-config-card" id="demo-link-section">
+        <div class="demo-link-header">
+            <div class="demo-link-badge-row">
+                <span class="badge badge-success">&#127916; Live Demo Session Link</span>
+                <span class="text-xs text-muted">Visible to students upon slot reservation</span>
+            </div>
+            <h2 class="demo-link-heading">Demo Class Meeting URL Configuration</h2>
+            <p class="demo-link-desc">
+                Set or update the live meeting URL (Zoom, Google Meet, MS Teams, etc.). Students with active bookings will automatically receive and see this link to join their scheduled demo session.
+            </p>
+        </div>
+
+        <form action="{{ url_for('admin.update_meeting_url') }}" method="POST" class="demo-link-form" id="form-update-meeting-url">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="demo-link-input-group">
+                <div class="demo-link-input-wrap">
+                    <span class="demo-link-icon">&#128279;</span>
+                    <input 
+                        type="url" 
+                        name="meeting_url" 
+                        value="{{ global_meeting_url }}" 
+                        placeholder="https://zoom.us/j/... or https://meet.google.com/..." 
+                        class="form-control" 
+                        id="global-meeting-url-input"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-save-meeting-url">
+                    &#128190; Save Meeting Link
+                </button>
+                <a href="{{ global_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline" id="btn-test-meeting-url">
+                    Test Link &rarr;
+                </a>
+            </div>
+            <div class="demo-link-status-bar">
+                <span class="text-xs text-muted">&#9432; Active Link: <code class="active-url-code" id="active-url-code">{{ global_meeting_url }}</code></span>
+            </div>
+        </form>
+    </div>
+
+    <!-- Filter and Search Bar -->
+    <div class="card filter-card">
+        <form method="GET" action="{{ url_for('admin.dashboard') }}" class="filter-form">
+            <div class="filter-group filter-search">
+                <input 
+                    type="text" 
+                    name="search" 
+                    placeholder="Search by name, phone, email, course..." 
+                    value="{{ search_query }}" 
+                    class="form-control"
+                    id="filter-search-input"
+                >
+            </div>
+
+            <div class="filter-group">
+                <select name="exam_goal" class="form-select" id="filter-goal-select">
+                    <option value="">All Exam Goals</option>
+                    <option value="NEET" {% if exam_goal == 'NEET' %}selected{% endif %}>NEET</option>
+                    <option value="JEE" {% if exam_goal == 'JEE' %}selected{% endif %}>JEE</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <select name="class_level" class="form-select" id="filter-class-select">
+                    <option value="">All Classes</option>
+                    <option value="11" {% if class_level == '11' %}selected{% endif %}>Class 11</option>
+                    <option value="12" {% if class_level == '12' %}selected{% endif %}>Class 12</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <select name="sync_status" class="form-select" id="filter-sync-select">
+                    <option value="">All Sync States</option>
+                    <option value="synced" {% if sync_status == 'synced' %}selected{% endif %}>Synced</option>
+                    <option value="pending" {% if sync_status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="failed" {% if sync_status == 'failed' %}selected{% endif %}>Failed</option>
+                </select>
+            </div>
+
+            <div class="filter-actions">
+                <button type="submit" class="btn btn-primary" id="btn-apply-filters">Apply Filters</button>
+                {% if search_query or exam_goal or class_level or sync_status %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline" id="btn-clear-filters">Clear</a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Leads and Bookings Table -->
+    <div class="card table-card">
+        <div class="table-header-wrap">
+            <h2 class="table-heading">Student Enquiries ({{ leads|length }})</h2>
+        </div>
+
+        {% if leads %}
+            <div class="table-responsive">
+                <table class="data-table" id="leads-table">
+                    <thead>
+                        <tr>
+                            <th>Student &amp; Contact</th>
+                            <th>Academic Goal</th>
+                            <th>Enquiry Sync</th>
+                            <th>Demo Appointment</th>
+                            <th>Booking Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for lead in leads %}
+                            <tr class="table-row" id="lead-row-{{ lead.id }}">
+                                <!-- Student & Contact Info -->
+                                <td class="col-student">
+                                    <div class="student-name font-semibold">{{ lead.student_name }}</div>
+                                    <div class="student-meta monospace">{{ lead.phone_e164 }}</div>
+                                    <div class="student-meta text-muted">{{ lead.email }}</div>
+                                </td>
+
+                                <!-- Academic Details -->
+                                <td class="col-academic">
+                                    <div><span class="badge badge-goal">{{ lead.exam_goal }}</span> Class {{ lead.class_level }}</div>
+                                    <div class="course-text">{{ lead.interested_course }}</div>
+                                </td>
+
+                                <!-- Enquiry Sheet Sync Status -->
+                                <td class="col-sync">
+                                    {% if lead.sheet_sync_status == 'synced' %}
+                                        <span class="badge badge-success">&#10003; Synced</span>
+                                    {% elif lead.sheet_sync_status == 'failed' %}
+                                        <div class="sync-status-box">
+                                            <span class="badge badge-danger">&#9888; Failed</span>
+                                            <form action="{{ url_for('admin.retry_single_sync', record_type='lead', record_id=lead.id) }}" method="POST" class="inline-form">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <button type="submit" class="btn btn-xs btn-outline" title="{{ lead.sheet_sync_error or 'Retry sync' }}">&#8635; Retry</button>
+                                            </form>
+                                        </div>
+                                    {% else %}
+                                        <span class="badge badge-pending">&#9203; Pending</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Demo Booking Information -->
+                                <td class="col-booking">
+                                    {% if lead.booking %}
+                                        <div class="booking-date-time">
+                                            <strong>{{ lead.booking.demo_date }}</strong>
+                                            <span class="slot-badge">{{ slot_labels.get(lead.booking.slot_time, lead.booking.slot_time) }}</span>
+                                        </div>
+                                        <div class="booking-meeting-mini">
+                                            <a href="{{ lead.booking.meeting_url or global_meeting_url }}" target="_blank" rel="noopener noreferrer" class="meeting-link-chip" title="Open Meeting: {{ lead.booking.meeting_url or global_meeting_url }}">
+                                                &#127916; Meeting Link &rarr;
+                                            </a>
+                                        </div>
+                                        <div class="booking-sync-status">
+                                            {% if lead.booking.sheet_sync_status == 'synced' %}
+                                                <span class="text-xs text-success">&#10003; Sheet Synced</span>
+                                            {% else %}
+                                                <span class="text-xs text-warning">&#9203; Sync Pending</span>
+                                                <form action="{{ url_for('admin.retry_single_sync', record_type='booking', record_id=lead.booking.id) }}" method="POST" class="inline-form">
+                                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                    <button type="submit" class="btn btn-xs btn-outline" title="Retry sync">&#8635;</button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div class="no-booking-wrap">
+                                            <span class="text-muted italic">No booking yet</span>
+                                        </div>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Booking Status Selector -->
+                                <td class="col-status">
+                                    {% if lead.booking %}
+                                        <form action="{{ url_for('admin.update_status', booking_id=lead.booking.id) }}" method="POST" class="status-change-form">
+                                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                            <div class="status-select-wrap">
+                                                <select name="status" class="form-select select-sm status-select status-select-{{ lead.booking.booking_status|lower|replace(' ', '-') }}" onchange="this.form.submit()">
+                                                    {% for st in booking_statuses %}
+                                                        <option value="{{ st }}" {% if lead.booking.booking_status == st %}selected{% endif %}>{{ st }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                <button type="submit" class="btn btn-xs btn-outline status-save-btn" title="Save Status">&#10003; Save</button>
+                                            </div>
+                                        </form>
+                                    {% else %}
+                                        <span class="badge badge-subtle">-</span>
+                                    {% endif %}
+                                </td>
+
+                                <!-- Booking Schedule / Reschedule Actions -->
+                                <td class="col-actions">
+                                    <details class="action-details">
+                                        <summary class="btn btn-outline-sm">
+                                            {% if lead.booking %}Reschedule{% else %}Book Slot{% endif %}
+                                        </summary>
+                                        <div class="quick-book-dropdown">
+                                            <form action="{{ url_for('admin.admin_schedule_booking', lead_id=lead.id) }}" method="POST">
+                                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                                <div class="form-group-sm">
+                                                    <label class="form-label-xs">Demo Date</label>
+                                                    <input type="date" name="demo_date" min="{{ min_date }}" value="{{ lead.booking.demo_date if lead.booking else min_date }}" class="form-control form-control-sm" required>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="form-label-xs">Time Slot</label>
+                                                    <select name="slot_time" class="form-select form-select-sm" required>
+                                                        {% for slot in slot_times %}
+                                                            <option value="{{ slot }}" {% if lead.booking and lead.booking.slot_time == slot %}selected{% endif %}>{{ slot_labels.get(slot, slot) }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="form-group-sm">
+                                                    <label class="form-label-xs">Meeting Link (Optional)</label>
+                                                    <input type="url" name="meeting_url" placeholder="{{ global_meeting_url }}" value="{{ lead.booking.meeting_url if lead.booking and lead.booking.meeting_url else '' }}" class="form-control form-control-sm">
+                                                </div>
+                                                <button type="submit" class="btn btn-primary btn-block btn-xs">Save Slot</button>
+                                            </form>
+                                        </div>
+                                    </details>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">&#128269;</div>
+                <h3>No Enquiry Records Found</h3>
+                <p>No enquiries match your current search or filter criteria. Try adjusting or clearing your filters.</p>
+                {% if search_query or exam_goal or class_level or sync_status %}
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Clear All Filters</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

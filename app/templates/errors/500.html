@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Internal Server Error - KMIE{% endblock %}
+
+{% block content %}
+<div class="page-container error-page">
+    <div class="card error-card">
+        <div class="error-code">500</div>
+        <h1 class="error-title">Temporary Service Problem</h1>
+        <p class="error-desc">We encountered an unexpected technical issue while processing your request. Please try again in a few moments.</p>
+        <div class="error-actions">
+            <a href="{{ url_for('public.index') }}" class="btn btn-primary">Return to Homepage</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

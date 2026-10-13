@@ -1,0 +1,212 @@
+{% extends "base.html" %}
+
+{% block title %}KMIE - Student Course Enquiry & Demo Booking{% endblock %}
+
+{% block content %}
+<div class="page-container enquiry-page">
+    <div class="hero-section">
+        <span class="badge-pill">Admissions 2026–2027</span>
+        <h1 class="hero-title">Start Your Journey Towards NEET & JEE Excellence</h1>
+        <p class="hero-subtitle">
+            Submit your enquiry below to speak with an academic counsellor and secure a free 1-on-1 demo class with KMIE faculty.
+        </p>
+    </div>
+
+    <!-- Quick Check: Student Demo Booking & Meeting Link Lookup -->
+    <div class="card check-status-card" id="check-status-banner">
+        <div class="check-status-info">
+            <span class="badge badge-success">&#127916; Already Booked a Demo?</span>
+            <div class="check-status-text">
+                <strong>Find Your Demo Class Meeting Link &amp; Scheduled Slot</strong>
+                <span class="text-muted text-xs">Enter your registered mobile number to see your appointment and Zoom/Meet session link.</span>
+            </div>
+        </div>
+        <form action="{{ url_for('public.check_status') }}" method="POST" class="check-status-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <div class="check-status-input-row">
+                <input 
+                    type="tel" 
+                    name="phone_number" 
+                    placeholder="e.g. 9876543210" 
+                    class="form-control form-control-sm" 
+                    required
+                    id="check-status-phone-input"
+                >
+                <button type="submit" class="btn btn-primary btn-sm" id="btn-check-my-status">
+                    View My Demo Link &rarr;
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="content-grid">
+        <!-- Main Form Card -->
+        <div class="card form-card">
+            <div class="card-header">
+                <h2 class="card-title">Student Enquiry Form</h2>
+                <p class="card-subtitle">Fill in your details accurately to register your interest.</p>
+            </div>
+
+            <form action="{{ url_for('public.submit_enquiry') }}" method="POST" id="enquiry-form" class="enquiry-form" novalidate>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <!-- Anti-Spam Honeypot Field (hidden from real users) -->
+                <div class="form-group honeypot-field" style="display:none;" aria-hidden="true">
+                    <label for="website_url_check">Do not fill this field</label>
+                    <input type="text" name="website_url_check" id="website_url_check" tabindex="-1" autocomplete="off">
+                </div>
+
+                <!-- 1. Student Name -->
+                <div class="form-group">
+                    <label for="student_name" class="form-label">
+                        Student Full Name <span class="required-star">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        name="student_name" 
+                        id="student_name" 
+                        class="form-control" 
+                        placeholder="e.g. Aarav Sharma" 
+                        value="{{ form_data.get('student_name', '') }}"
+                        required
+                        minlength="2"
+                        maxlength="100"
+                        autocomplete="name"
+                    >
+                    <span class="form-hint">Enter the student's legal name.</span>
+                </div>
+
+                <!-- 2. Phone Number -->
+                <div class="form-group">
+                    <label for="phone_number" class="form-label">
+                        Contact Phone Number <span class="required-star">*</span>
+                    </label>
+                    <div class="input-with-prefix">
+                        <input 
+                            type="tel" 
+                            name="phone_number" 
+                            id="phone_number" 
+                            class="form-control" 
+                            placeholder="e.g. 9876543210 or +91 98765 43210" 
+                            value="{{ form_data.get('phone_number', '') }}"
+                            required
+                            autocomplete="tel"
+                        >
+                    </div>
+                    <span class="form-hint">Indian 10-digit mobile or international number with country code. Used for duplicate check.</span>
+                </div>
+
+                <!-- 3. Email Address -->
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        Email Address <span class="required-star">*</span>
+                    </label>
+                    <input 
+                        type="email" 
+                        name="email" 
+                        id="email" 
+                        class="form-control" 
+                        placeholder="e.g. aarav.sharma@example.com" 
+                        value="{{ form_data.get('email', '') }}"
+                        required
+                        autocomplete="email"
+                    >
+                    <span class="form-hint">We will share session details and confirmations to this email.</span>
+                </div>
+
+                <div class="form-row two-cols">
+                    <!-- 4. Class Level -->
+                    <div class="form-group">
+                        <label for="class_level" class="form-label">
+                            Current Class <span class="required-star">*</span>
+                        </label>
+                        <select name="class_level" id="class_level" class="form-select" required>
+                            <option value="" disabled {% if not form_data.get('class_level') %}selected{% endif %}>Select Class</option>
+                            {% for c in classes %}
+                                <option value="{{ c }}" {% if form_data.get('class_level') == c %}selected{% endif %}>Class {{ c }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- 5. Exam Goal -->
+                    <div class="form-group">
+                        <label for="exam_goal" class="form-label">
+                            Target Exam Goal <span class="required-star">*</span>
+                        </label>
+                        <select name="exam_goal" id="exam_goal" class="form-select" required>
+                            <option value="" disabled {% if not form_data.get('exam_goal') %}selected{% endif %}>Select Exam Goal</option>
+                            {% for g in exam_goals %}
+                                <option value="{{ g }}" {% if form_data.get('exam_goal') == g %}selected{% endif %}>{{ g }} (Engineering / Medical)</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 6. Interested Course -->
+                <div class="form-group">
+                    <label for="interested_course" class="form-label">
+                        Interested Course <span class="required-star">*</span>
+                    </label>
+                    <select name="interested_course" id="interested_course" class="form-select" required>
+                        <option value="" disabled {% if not form_data.get('interested_course') %}selected{% endif %}>Select Course of Interest</option>
+                        {% for course in courses %}
+                            <option value="{{ course }}" {% if form_data.get('interested_course') == course %}selected{% endif %}>{{ course }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-submit-enquiry">
+                        <span class="btn-text">Submit Enquiry &amp; Proceed to Demo Slot</span>
+                        <span class="spinner" style="display:none;"></span>
+                    </button>
+                </div>
+
+                <p class="privacy-note">
+                    Your details are securely stored in our admissions database. Duplicate submissions with identical phone numbers are automatically linked.
+                </p>
+            </form>
+        </div>
+
+        <!-- Sidebar / Value Proposition Info -->
+        <aside class="sidebar-info">
+            <div class="card info-card">
+                <h3 class="info-card-title">Why Learn with KMIE?</h3>
+                <ul class="benefit-list">
+                    <li class="benefit-item">
+                        <div class="benefit-icon">&#10003;</div>
+                        <div class="benefit-text">
+                            <strong>Personalized Mentorship:</strong> Small batches with direct doubt clearing by expert mentors.
+                        </div>
+                    </li>
+                    <li class="benefit-item">
+                        <div class="benefit-icon">&#10003;</div>
+                        <div class="benefit-text">
+                            <strong>Comprehensive Curriculum:</strong> Rigorous NEET &amp; JEE question banks, mock exams, and analytics.
+                        </div>
+                    </li>
+                    <li class="benefit-item">
+                        <div class="benefit-icon">&#10003;</div>
+                        <div class="benefit-text">
+                            <strong>Free Demo Booking:</strong> Immediately schedule a live demo session upon enquiry submission.
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card highlight-card">
+                <div class="badge-mini">Immediate Demo Booking</div>
+                <h4 class="highlight-title">4 Daily Demo Time Slots</h4>
+                <p class="highlight-desc">Choose from convenient afternoon and evening slots: 1:00 PM, 3:00 PM, 5:00 PM, or 7:00 PM IST.</p>
+                <div class="slot-chips">
+                    <span class="chip">1:00 PM</span>
+                    <span class="chip">3:00 PM</span>
+                    <span class="chip">5:00 PM</span>
+                    <span class="chip">7:00 PM</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

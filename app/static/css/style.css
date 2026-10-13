@@ -1,0 +1,1442 @@
+/* ==========================================================================
+   KMIE Student Enquiry & Demo Booking Automation
+   Design System: Clean, Modern Light-Mode, Emerald/Teal Accent Palette
+   ========================================================================== */
+
+:root {
+    --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    
+    /* Light Theme Palette */
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-surface-subtle: #f1f5f9;
+    --color-border: #e2e8f0;
+    --color-border-focus: #0d9488;
+    
+    /* Typography */
+    --color-text-main: #0f172a;
+    --color-text-muted: #475569;
+    --color-text-subtle: #64748b;
+    --color-text-inverse: #ffffff;
+    
+    /* Brand & Accent (Emerald / Teal) */
+    --color-primary: #0d9488;
+    --color-primary-hover: #0f766e;
+    --color-primary-light: #ccfbf1;
+    --color-primary-dark: #115e59;
+    
+    /* Semantic Feedback */
+    --color-success: #15803d;
+    --color-success-bg: #dcfce7;
+    --color-success-border: #86efac;
+    
+    --color-warning: #b45309;
+    --color-warning-bg: #fef3c7;
+    --color-warning-border: #fcd34d;
+    
+    --color-danger: #b91c1c;
+    --color-danger-bg: #fee2e2;
+    --color-danger-border: #fca5a5;
+
+    --color-info: #0369a1;
+    --color-info-bg: #e0f2fe;
+    
+    /* Radii & Shadows */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
+    --radius-full: 9999px;
+    
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+}
+
+/* Box Sizing & Reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--color-bg);
+    color: var(--color-text-main);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   App Header & Navigation
+   -------------------------------------------------------------------------- */
+.app-header {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0.85rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--color-text-main);
+}
+
+.brand-icon {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+    color: var(--color-text-inverse);
+    font-weight: 700;
+    font-size: 1.25rem;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.02em;
+    display: block;
+}
+
+.brand-subtitle {
+    font-size: 0.72rem;
+    color: var(--color-text-subtle);
+    font-weight: 500;
+    display: block;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.15s ease;
+}
+
+.nav-link:hover {
+    color: var(--color-primary);
+    background-color: var(--color-surface-subtle);
+}
+
+.nav-link.admin-tag {
+    color: var(--color-primary-dark);
+    background-color: var(--color-primary-light);
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Layout Containers
+   -------------------------------------------------------------------------- */
+.main-content {
+    flex: 1;
+    padding-bottom: 3rem;
+}
+
+.page-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+}
+
+.alerts-container {
+    max-width: 1100px;
+    margin: 1rem auto 0;
+    padding: 0 1.5rem;
+}
+
+/* Hero Section */
+.hero-section {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.hero-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.03em;
+    margin: 0.5rem 0;
+}
+
+.hero-subtitle {
+    font-size: 1.05rem;
+    color: var(--color-text-muted);
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.badge-pill {
+    display: inline-block;
+    padding: 0.25rem 0.85rem;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-radius: var(--radius-full);
+}
+
+/* Content Grid */
+.content-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 2rem;
+    align-items: start;
+}
+
+@media (max-width: 860px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   Cards & Form Styles
+   -------------------------------------------------------------------------- */
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 2rem;
+}
+
+.card-header {
+    margin-bottom: 1.5rem;
+}
+
+.card-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    letter-spacing: -0.02em;
+}
+
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.25rem;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+}
+
+.form-row.two-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+@media (max-width: 540px) {
+    .form-row.two-cols {
+        grid-template-columns: 1fr;
+    }
+}
+
+.form-label {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+    margin-bottom: 0.4rem;
+}
+
+.required-star {
+    color: var(--color-danger);
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    font-size: 0.95rem;
+    font-family: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface);
+    color: var(--color-text-main);
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--color-border-focus);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+.form-hint {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.35rem;
+}
+
+.privacy-note {
+    font-size: 0.78rem;
+    color: var(--color-text-subtle);
+    text-align: center;
+    margin-top: 1rem;
+    line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   Buttons
+   -------------------------------------------------------------------------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.65rem 1.25rem;
+    border-radius: var(--radius-md);
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s ease;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn-outline {
+    background-color: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text-main);
+}
+
+.btn-outline:hover {
+    background-color: var(--color-surface-subtle);
+    border-color: var(--color-text-subtle);
+}
+
+.btn-outline-sm {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.82rem;
+    background-color: transparent;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-main);
+    cursor: pointer;
+}
+
+.btn-outline-sm:hover {
+    background-color: var(--color-surface-subtle);
+}
+
+.btn-lg {
+    padding: 0.85rem 1.5rem;
+    font-size: 1rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-xs {
+    padding: 0.2rem 0.5rem;
+    font-size: 0.75rem;
+    border-radius: var(--radius-sm);
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--color-text-muted);
+}
+
+.btn-ghost:hover {
+    color: var(--color-text-main);
+}
+
+/* --------------------------------------------------------------------------
+   Sidebar & Highlight Cards
+   -------------------------------------------------------------------------- */
+.sidebar-info {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.info-card-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: var(--color-text-main);
+}
+
+.benefit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.benefit-item {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.benefit-icon {
+    width: 24px;
+    height: 24px;
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+}
+
+.benefit-text {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+}
+
+.highlight-card {
+    background: linear-gradient(135deg, #f0fdfa, #ccfbf1);
+    border-color: #99f6e4;
+}
+
+.badge-mini {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.5rem;
+}
+
+.highlight-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+}
+
+.highlight-desc {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0.35rem 0 0.85rem;
+}
+
+.slot-chips {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.chip {
+    background-color: var(--color-surface);
+    border: 1px solid #99f6e4;
+    color: var(--color-primary-dark);
+    font-weight: 600;
+    font-size: 0.78rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: var(--radius-sm);
+}
+
+/* --------------------------------------------------------------------------
+   Result & Status Pages
+   -------------------------------------------------------------------------- */
+.result-card-wrapper, .booking-card-wrapper, .confirmation-wrapper, .login-card-wrapper {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+.status-card {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.status-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto 1.5rem;
+}
+
+.success-icon {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.warning-icon {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.danger-icon {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+
+.status-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.status-message {
+    font-size: 1rem;
+    color: var(--color-text-muted);
+    max-width: 500px;
+    margin: 0 auto 1.5rem;
+}
+
+.sync-indicator {
+    margin-bottom: 1.5rem;
+}
+
+.details-box {
+    background-color: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    text-align: left;
+    margin-bottom: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.88rem;
+}
+
+.detail-label {
+    color: var(--color-text-subtle);
+    font-weight: 500;
+}
+
+.detail-val {
+    color: var(--color-text-main);
+    font-weight: 600;
+}
+
+.next-step-callout {
+    background-color: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1.75rem;
+}
+
+.next-step-callout h3 {
+    font-size: 1rem;
+    color: var(--color-primary-dark);
+    margin-bottom: 0.25rem;
+}
+
+.next-step-callout p {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+}
+
+.status-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Demo Booking Slots UI
+   -------------------------------------------------------------------------- */
+.booking-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.info-banner {
+    background-color: var(--color-info-bg);
+    border: 1px solid #7dd3fc;
+    color: var(--color-info);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    font-size: 0.88rem;
+    margin-bottom: 1.5rem;
+}
+
+.highlight-text {
+    font-weight: 700;
+}
+
+.slot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+@media (max-width: 500px) {
+    .slot-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.slot-card {
+    position: relative;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    cursor: pointer;
+    background-color: var(--color-surface);
+    display: block;
+    transition: all 0.15s ease;
+}
+
+.slot-card:hover {
+    border-color: var(--color-primary);
+    background-color: #f0fdfa;
+}
+
+.slot-radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.slot-card.active, .slot-card:has(.slot-radio:checked) {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.slot-card-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.slot-time-text {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.slot-24h {
+    font-size: 0.75rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.2rem;
+}
+
+.booking-footer-note {
+    text-align: center;
+    font-size: 0.82rem;
+    color: var(--color-text-subtle);
+    margin-top: 1.5rem;
+}
+
+/* --------------------------------------------------------------------------
+   Confirmation Page
+   -------------------------------------------------------------------------- */
+.conf-badge-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+}
+
+.conf-badge {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-full);
+    background: var(--color-success-bg);
+    color: var(--color-success);
+    font-size: 2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.conf-title {
+    text-align: center;
+    font-size: 1.7rem;
+    font-weight: 700;
+}
+
+.conf-subtitle {
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--color-text-muted);
+    margin-bottom: 1.75rem;
+}
+
+.conf-summary-box {
+    background-color: var(--color-surface-subtle);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    margin-bottom: 1.5rem;
+}
+
+.conf-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+}
+
+.conf-row.highlight-row {
+    padding: 0.4rem 0;
+    border-top: 1px dashed var(--color-border);
+    border-bottom: 1px dashed var(--color-border);
+}
+
+.highlight-date, .highlight-time {
+    color: var(--color-primary-dark);
+    font-weight: 700;
+}
+
+.meeting-link-card {
+    border: 1px solid #99f6e4;
+    background-color: #f0fdfa;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.meeting-header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.meeting-icon {
+    font-size: 1.5rem;
+}
+
+.meeting-heading {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--color-primary-dark);
+}
+
+.meeting-sub {
+    font-size: 0.82rem;
+    color: var(--color-text-muted);
+}
+
+.meeting-url-box {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.meeting-url-input {
+    font-family: monospace;
+    font-size: 0.85rem;
+    background: #fff;
+}
+
+.placeholder-disclaimer {
+    font-size: 0.76rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.65rem;
+    line-height: 1.4;
+}
+
+.conf-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Admin Dashboard & Metrics
+   -------------------------------------------------------------------------- */
+.dashboard-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.dashboard-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+}
+
+.dashboard-subtitle {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+}
+
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.metric-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    background-color: var(--color-surface-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.metric-icon-green {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.metric-icon-amber {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.metric-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1.1;
+}
+
+.metric-label {
+    font-size: 0.78rem;
+    color: var(--color-text-subtle);
+    font-weight: 500;
+}
+
+/* Filters */
+.filter-card {
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.filter-form {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-search {
+    flex: 1 1 250px;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Table */
+.table-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.table-header-wrap {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.table-heading {
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+    text-align: left;
+}
+
+.data-table th {
+    background-color: var(--color-surface-subtle);
+    color: var(--color-text-muted);
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.data-table td {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    vertical-align: top;
+}
+
+.table-row:hover {
+    background-color: #fafbfc;
+}
+
+.student-meta {
+    font-size: 0.78rem;
+    margin-top: 0.15rem;
+}
+
+.course-text {
+    font-size: 0.8rem;
+    color: var(--color-text-subtle);
+    margin-top: 0.2rem;
+}
+
+.slot-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    background: #f1f5f9;
+    padding: 0.15rem 0.4rem;
+    border-radius: var(--radius-sm);
+    margin-left: 0.35rem;
+}
+
+.action-details {
+    position: relative;
+}
+
+.action-details summary {
+    list-style: none;
+    user-select: none;
+}
+
+.action-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.quick-book-dropdown {
+    position: absolute;
+    right: 0;
+    top: 100%;
+    margin-top: 0.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 0.85rem;
+    z-index: 50;
+    width: 200px;
+}
+
+.form-group-sm {
+    margin-bottom: 0.5rem;
+}
+
+.form-label-xs {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    margin-bottom: 0.2rem;
+}
+
+.form-control-sm, .form-select-sm {
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.empty-state {
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-text-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   Badges
+   -------------------------------------------------------------------------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-full);
+}
+
+.badge-success {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.badge-pending {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.badge-danger {
+    background-color: var(--color-danger-bg);
+    color: var(--color-danger);
+}
+
+.badge-goal {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.badge-status-booked {
+    background-color: #dbeafe;
+    color: #1d4ed8;
+}
+
+/* Alerts */
+.alert {
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.alert-success {
+    background-color: var(--color-success-bg);
+    border: 1px solid var(--color-success-border);
+    color: var(--color-success);
+}
+
+.alert-warning {
+    background-color: var(--color-warning-bg);
+    border: 1px solid var(--color-warning-border);
+    color: var(--color-warning);
+}
+
+.alert-danger {
+    background-color: var(--color-danger-bg);
+    border: 1px solid var(--color-danger-border);
+    color: var(--color-danger);
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: inherit;
+    line-height: 1;
+}
+
+/* Footer */
+.app-footer {
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: 2rem 1.5rem;
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.footer-desc {
+    font-size: 0.82rem;
+    color: var(--color-text-subtle);
+    max-width: 400px;
+    margin-top: 0.25rem;
+}
+
+.footer-meta {
+    font-size: 0.82rem;
+    color: var(--color-text-subtle);
+    text-align: right;
+}
+
+@media (max-width: 640px) {
+    .footer-meta {
+        text-align: left;
+    }
+}
+
+.footer-links {
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+    .footer-links {
+        justify-content: flex-start;
+    }
+}
+
+.footer-links a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    color: var(--color-primary);
+}
+
+.separator {
+    color: var(--color-border);
+}
+
+/* Helpers */
+.monospace { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+.font-semibold { font-weight: 600; }
+.italic { font-style: italic; }
+.text-muted { color: var(--color-text-subtle); }
+.text-xs { font-size: 0.72rem; }
+.text-success { color: var(--color-success); }
+.text-warning { color: var(--color-warning); }
+.inline-form { display: inline-block; }
+
+/* --------------------------------------------------------------------------
+   Demo Class Meeting Link Settings & Dashboard Enhancements
+   -------------------------------------------------------------------------- */
+.demo-link-config-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f0fdf4 100%);
+    border: 1.5px solid #86efac;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 12px -2px rgba(13, 148, 136, 0.08);
+}
+
+.demo-link-badge-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.4rem;
+}
+
+.demo-link-heading {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #115e59;
+    margin-bottom: 0.35rem;
+}
+
+.demo-link-desc {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    max-width: 800px;
+    margin-bottom: 1rem;
+    line-height: 1.45;
+}
+
+.demo-link-input-group {
+    display: flex;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.demo-link-input-wrap {
+    flex: 1 1 380px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.demo-link-icon {
+    position: absolute;
+    left: 0.85rem;
+    font-size: 1rem;
+    color: var(--color-text-subtle);
+    pointer-events: none;
+}
+
+.demo-link-input-wrap .form-control {
+    padding-left: 2.35rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.88rem;
+    border-color: #99f6e4;
+}
+
+.demo-link-status-bar {
+    margin-top: 0.65rem;
+}
+
+.active-url-code {
+    background: #e6fffa;
+    color: #0f766e;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.78rem;
+    word-break: break-all;
+}
+
+/* Table Enhancements */
+.booking-meeting-mini {
+    margin-top: 0.35rem;
+}
+
+.meeting-link-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #0f766e;
+    background: #ccfbf1;
+    border: 1px solid #99f6e4;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.meeting-link-chip:hover {
+    background: #0d9488;
+    color: #ffffff;
+}
+
+.status-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.status-select {
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 0.3rem 0.5rem;
+    font-size: 0.8rem;
+    min-width: 110px;
+}
+
+.status-select-booked {
+    border-color: #93c5fd;
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}
+
+.status-select-attended {
+    border-color: #86efac;
+    background-color: #f0fdf4;
+    color: #15803d;
+}
+
+.status-select-not-attended {
+    border-color: #fcd34d;
+    background-color: #fffbeb;
+    color: #b45309;
+}
+
+.status-save-btn {
+    padding: 0.3rem 0.45rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+}
+
+.badge-subtle {
+    background: #f1f5f9;
+    color: #94a3b8;
+    padding: 0.15rem 0.45rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   Student Booking Meeting Link View & Lookup Banner
+   -------------------------------------------------------------------------- */
+.check-status-card {
+    background: #ffffff;
+    border: 1.5px solid #ccfbf1;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.check-status-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.check-status-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.check-status-text strong {
+    font-size: 0.95rem;
+    color: var(--color-text-main);
+}
+
+.check-status-input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.existing-booking-highlight-card {
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+    border: 1.5px solid #86efac;
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+    text-align: left;
+}
+
+.booking-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.85rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.booking-schedule-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    background: #ffffff;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid #dcfce7;
+    margin-bottom: 1rem;
+}
+
+.schedule-label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-subtle);
+    font-weight: 600;
+}
+
+.schedule-value {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #115e59;
+    margin-top: 0.15rem;
+}
+
+.meeting-callout-box {
+    background: #ffffff;
+    border: 1px solid #99f6e4;
+    border-radius: var(--radius-sm);
+    padding: 1rem;
+}
+
+.meeting-callout-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.meeting-callout-header .meeting-icon {
+    font-size: 1.5rem;
+}
+
+.meeting-input-row {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.meeting-input-row .form-control {
+    flex: 1 1 240px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.85rem;
+    background: #f8fafc;
+}
+
+.badge-status-attended {
+    background-color: var(--color-success-bg);
+    color: var(--color-success);
+}
+
+.badge-status-not-attended {
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning);
+}
+
+.existing-booking-card-mini {
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    padding: 1rem;
+    margin-bottom: 1.25rem;
+}
+

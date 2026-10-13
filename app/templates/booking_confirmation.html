@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}Booking Confirmed - KMIE{% endblock %}
+
+{% block content %}
+<div class="page-container confirmation-page">
+    <div class="confirmation-wrapper">
+        <div class="card confirmation-card">
+            <div class="conf-badge-wrapper">
+                <div class="conf-badge">&#10003;</div>
+            </div>
+
+            <h1 class="conf-title">Demo Class Confirmed!</h1>
+            <p class="conf-subtitle">
+                Your 1-on-1 demo appointment has been successfully scheduled and linked to your enquiry.
+            </p>
+
+            <!-- Booking Summary Box -->
+            <div class="conf-summary-box">
+                <div class="conf-row">
+                    <span class="conf-label">Student Name:</span>
+                    <span class="conf-value font-semibold">{{ lead.student_name }}</span>
+                </div>
+                <div class="conf-row">
+                    <span class="conf-label">Target Goal:</span>
+                    <span class="conf-value">{{ lead.exam_goal }} &bull; Class {{ lead.class_level }}</span>
+                </div>
+                <div class="conf-row">
+                    <span class="conf-label">Course:</span>
+                    <span class="conf-value">{{ lead.interested_course }}</span>
+                </div>
+                <div class="conf-row highlight-row">
+                    <span class="conf-label">Demo Date:</span>
+                    <span class="conf-value highlight-date">{{ formatted_date }}</span>
+                </div>
+                <div class="conf-row highlight-row">
+                    <span class="conf-label">Session Slot:</span>
+                    <span class="conf-value highlight-time">{{ formatted_time }}</span>
+                </div>
+                <div class="conf-row">
+                    <span class="conf-label">Booking Status:</span>
+                    <span class="conf-value">
+                        <span class="badge badge-status-booked">{{ booking.booking_status }}</span>
+                    </span>
+                </div>
+                <div class="conf-row">
+                    <span class="conf-label">Spreadsheet Sync:</span>
+                    <span class="conf-value">
+                        {% if booking.sheet_sync_status == 'synced' %}
+                            <span class="badge badge-success">&#10003; Synced</span>
+                        {% else %}
+                            <span class="badge badge-pending">&#9203; Queued / Pending</span>
+                        {% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- Virtual Meeting Session Link Box -->
+            <div class="meeting-link-card">
+                <div class="meeting-header">
+                    <span class="meeting-icon">&#127916;</span>
+                    <div>
+                        <h3 class="meeting-heading">Demo Class Meeting Link</h3>
+                        <p class="meeting-sub">Join using the video conferencing link below at your scheduled time.</p>
+                    </div>
+                </div>
+
+                <div class="meeting-url-box">
+                    <input type="text" readonly value="{{ demo_meeting_url }}" id="meeting-url-input" class="form-control meeting-url-input">
+                    <a href="{{ demo_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-meeting">
+                        Open Meeting &rarr;
+                    </a>
+                </div>
+
+                <div class="placeholder-disclaimer">
+                    <strong>Notice:</strong> The link above is a placeholder URL configured via <code>DEMO_MEETING_URL</code> for assessment demonstration purposes.
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="conf-actions">
+                {% if token %}
+                    <a href="{{ url_for('booking.select_slot', token=token) }}" class="btn btn-outline" id="btn-reschedule">
+                        Reschedule Appointment
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('public.index') }}" class="btn btn-ghost" id="btn-home">
+                    Return to Home
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

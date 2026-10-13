@@ -1,0 +1,54 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv/
+
+# Environment and Secrets
+.env
+.env.local
+*.json
+!mcp_config.json
+!service_account.example.json
+credentials/
+*.pem
+*.key
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# IDE and OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
