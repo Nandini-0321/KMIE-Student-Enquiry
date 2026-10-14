@@ -7,8 +7,12 @@
     <!-- Dashboard Top Bar -->
     <div class="dashboard-topbar">
         <div>
+            <div class="demo-link-badge-row">
+                <span class="badge badge-goal">Enterprise Admin</span>
+                <span class="text-xs text-muted">Real-Time Admissions &amp; Appointment Sync</span>
+            </div>
             <h1 class="dashboard-title">Admissions &amp; Bookings Management</h1>
-            <p class="dashboard-subtitle">Monitor student enquiries, schedule demo appointments, and synchronize with Google Sheets.</p>
+            <p class="dashboard-subtitle">Monitor student enquiries, schedule 1-on-1 demo appointments, and synchronize records to Google Sheets.</p>
         </div>
         <div class="dashboard-actions">
             <form action="{{ url_for('admin.retry_all_pending_sync') }}" method="POST" class="inline-form">
@@ -20,10 +24,12 @@
         </div>
     </div>
 
-    <!-- Summary Metrics Grid -->
+    <!-- Summary Metrics Grid with Glass & Neumorphic Icon Accents -->
     <div class="metrics-grid">
         <div class="metric-card">
-            <div class="metric-icon">&#128101;</div>
+            <div class="neu-icon-wrap">
+                &#128101;
+            </div>
             <div class="metric-content">
                 <span class="metric-value">{{ metrics.total_leads }}</span>
                 <span class="metric-label">Total Student Leads</span>
@@ -31,7 +37,9 @@
         </div>
 
         <div class="metric-card">
-            <div class="metric-icon">&#128197;</div>
+            <div class="neu-icon-wrap" style="color: #2563EB;">
+                &#128197;
+            </div>
             <div class="metric-content">
                 <span class="metric-value">{{ metrics.total_bookings }}</span>
                 <span class="metric-label">Total Demo Bookings</span>
@@ -39,15 +47,19 @@
         </div>
 
         <div class="metric-card">
-            <div class="metric-icon metric-icon-green">&#9989;</div>
+            <div class="neu-icon-wrap" style="color: #15803D;">
+                &#9989;
+            </div>
             <div class="metric-content">
                 <span class="metric-value">{{ metrics.attended_bookings }}</span>
-                <span class="metric-label">Attended Demos</span>
+                <span class="metric-label">Attended Demo Sessions</span>
             </div>
         </div>
 
         <div class="metric-card">
-            <div class="metric-icon metric-icon-amber">&#9203;</div>
+            <div class="neu-icon-wrap" style="color: #B45309;">
+                &#9203;
+            </div>
             <div class="metric-content">
                 <span class="metric-value">{{ metrics.pending_sync_count }}</span>
                 <span class="metric-label">Pending Sheet Syncs</span>
@@ -64,7 +76,7 @@
             </div>
             <h2 class="demo-link-heading">Demo Class Meeting URL Configuration</h2>
             <p class="demo-link-desc">
-                Set or update the live meeting URL (Zoom, Google Meet, MS Teams, etc.). Students with active bookings will automatically receive and see this link to join their scheduled demo session.
+                Set or update the global meeting URL (Zoom, Google Meet, MS Teams, etc.). Students with active bookings will automatically receive and view this link to join their scheduled demo session.
             </p>
         </div>
 
@@ -91,7 +103,7 @@
                 </a>
             </div>
             <div class="demo-link-status-bar">
-                <span class="text-xs text-muted">&#9432; Active Link: <code class="active-url-code" id="active-url-code">{{ global_meeting_url }}</code></span>
+                <span class="text-xs text-muted">&#9432; Active Default URL: <code class="active-url-code" id="active-url-code">{{ global_meeting_url }}</code></span>
             </div>
         </form>
     </div>
@@ -103,7 +115,7 @@
                 <input 
                     type="text" 
                     name="search" 
-                    placeholder="Search by name, phone, email, course..." 
+                    placeholder="Search by student name, phone (+91), email, or course..." 
                     value="{{ search_query }}" 
                     class="form-control"
                     id="filter-search-input"
@@ -144,10 +156,11 @@
         </form>
     </div>
 
-    <!-- Leads and Bookings Table -->
+    <!-- Leads and Bookings CRM Table -->
     <div class="card table-card">
         <div class="table-header-wrap">
             <h2 class="table-heading">Student Enquiries ({{ leads|length }})</h2>
+            <span class="text-xs text-muted">Canonical E.164 Indian Phone Numbers (+91)</span>
         </div>
 
         {% if leads %}
@@ -169,13 +182,19 @@
                                 <!-- Student & Contact Info -->
                                 <td class="col-student">
                                     <div class="student-name font-semibold">{{ lead.student_name }}</div>
-                                    <div class="student-meta monospace">{{ lead.phone_e164 }}</div>
+                                    <div class="student-meta monospace">
+                                        <span class="phone-flag" style="font-size: 0.85rem;">&#127470;&#127475;</span>
+                                        {{ lead.phone_e164 }}
+                                    </div>
                                     <div class="student-meta text-muted">{{ lead.email }}</div>
                                 </td>
 
                                 <!-- Academic Details -->
                                 <td class="col-academic">
-                                    <div><span class="badge badge-goal">{{ lead.exam_goal }}</span> Class {{ lead.class_level }}</div>
+                                    <div>
+                                        <span class="badge badge-goal">{{ lead.exam_goal }}</span> 
+                                        <span class="text-xs font-semibold">Class {{ lead.class_level }}</span>
+                                    </div>
                                     <div class="course-text">{{ lead.interested_course }}</div>
                                 </td>
 
@@ -184,7 +203,7 @@
                                     {% if lead.sheet_sync_status == 'synced' %}
                                         <span class="badge badge-success">&#10003; Synced</span>
                                     {% elif lead.sheet_sync_status == 'failed' %}
-                                        <div class="sync-status-box">
+                                        <div class="sync-status-box" style="display: flex; gap: 0.35rem; align-items: center;">
                                             <span class="badge badge-danger">&#9888; Failed</span>
                                             <form action="{{ url_for('admin.retry_single_sync', record_type='lead', record_id=lead.id) }}" method="POST" class="inline-form">
                                                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -208,7 +227,7 @@
                                                 &#127916; Meeting Link &rarr;
                                             </a>
                                         </div>
-                                        <div class="booking-sync-status">
+                                        <div class="booking-sync-status" style="margin-top: 0.25rem;">
                                             {% if lead.booking.sheet_sync_status == 'synced' %}
                                                 <span class="text-xs text-success">&#10003; Sheet Synced</span>
                                             {% else %}
@@ -221,7 +240,7 @@
                                         </div>
                                     {% else %}
                                         <div class="no-booking-wrap">
-                                            <span class="text-muted italic">No booking yet</span>
+                                            <span class="text-muted italic text-xs">No booking scheduled</span>
                                         </div>
                                     {% endif %}
                                 </td>
@@ -237,7 +256,7 @@
                                                         <option value="{{ st }}" {% if lead.booking.booking_status == st %}selected{% endif %}>{{ st }}</option>
                                                     {% endfor %}
                                                 </select>
-                                                <button type="submit" class="btn btn-xs btn-outline status-save-btn" title="Save Status">&#10003; Save</button>
+                                                <button type="submit" class="btn btn-xs btn-outline status-save-btn" title="Save Status">&#10003;</button>
                                             </div>
                                         </form>
                                     {% else %}
@@ -284,9 +303,9 @@
             <div class="empty-state">
                 <div class="empty-icon">&#128269;</div>
                 <h3>No Enquiry Records Found</h3>
-                <p>No enquiries match your current search or filter criteria. Try adjusting or clearing your filters.</p>
+                <p>No student enquiries match your current search or filter criteria. Try adjusting your search query.</p>
                 {% if search_query or exam_goal or class_level or sync_status %}
-                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline">Clear All Filters</a>
+                    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline" style="margin-top: 0.5rem;">Clear All Filters</a>
                 {% endif %}
             </div>
         {% endif %}

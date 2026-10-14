@@ -9,19 +9,19 @@
             <div class="login-header">
                 <div class="admin-badge-icon">&#128274;</div>
                 <h1 class="card-title">Staff Administration Login</h1>
-                <p class="card-subtitle">Sign in to manage student enquiries, demo bookings, and spreadsheet synchronization.</p>
+                <p class="card-subtitle">Sign in with authorized administrator credentials to manage student enquiries, appointments, and sync queues.</p>
             </div>
 
             {% if not is_configured %}
                 <div class="alert alert-warning" role="alert">
-                    <strong>Admin Access Disabled:</strong> The <code>ADMIN_USERNAME</code> and <code>ADMIN_PASSWORD_HASH</code> environment variables are not yet configured. Please set them to enable administrator access.
+                    <strong>Admin Access Disabled:</strong> The <code>ADMIN_USERNAME</code> and <code>ADMIN_PASSWORD_HASH</code> environment variables are not yet configured. Please set them in <code>.env</code> to enable administrator login.
                 </div>
             {% else %}
                 <form action="{{ url_for('admin.login') }}" method="POST" class="login-form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
                     <div class="form-group">
-                        <label for="username" class="form-label">Admin Username</label>
+                        <label for="username" class="form-label">Administrator Username</label>
                         <input 
                             type="text" 
                             name="username" 
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="password" class="form-label">Admin Password</label>
+                        <label for="password" class="form-label">Administrator Password</label>
                         <input 
                             type="password" 
                             name="password" 
@@ -46,7 +46,7 @@
                         >
                     </div>
 
-                    <div class="form-actions">
+                    <div class="form-actions" style="margin-top: 1.5rem;">
                         <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-login">
                             Sign In to Dashboard &rarr;
                         </button>
@@ -55,7 +55,7 @@
             {% endif %}
 
             <div class="login-footer">
-                <a href="{{ url_for('public.index') }}" class="subtle-link">&larr; Return to Student Portal</a>
+                <a href="{{ url_for('public.index') }}" class="subtle-link text-xs">&larr; Return to Student Admissions Portal</a>
             </div>
         </div>
     </div>

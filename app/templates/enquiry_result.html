@@ -6,69 +6,76 @@
 
 {% block content %}
 <div class="page-container result-page">
-    <div class="result-card-wrapper">
+    <div class="confirmation-wrapper">
         {% if is_duplicate %}
-            <!-- Duplicate / Existing Student Registration & Booking Status -->
-            <div class="card status-card card-warning">
-                <div class="status-icon warning-icon">&#9432;</div>
-                <h1 class="status-title">Student Registration Found</h1>
-                <p class="status-message">
-                    An enquiry associated with phone number <strong>{{ masked_phone }}</strong> is registered in our admissions system.
+            <!-- Existing Student Registration Found -->
+            <div class="card status-card">
+                <div class="conf-badge-wrapper">
+                    <div class="conf-badge" style="background: linear-gradient(135deg, #0F766E 0%, #0D9488 100%);">
+                        &#9432;
+                    </div>
+                </div>
+                <h1 class="conf-title">Student Registration Found</h1>
+                <p class="conf-subtitle">
+                    An enquiry associated with phone number <strong>{{ masked_phone }}</strong> is already registered in our admissions system.
                 </p>
 
-                <div class="details-box">
-                    <div class="detail-row">
-                        <span class="detail-label">Student Name:</span>
-                        <span class="detail-val font-semibold">{{ lead.student_name }}</span>
+                <div class="conf-summary-box">
+                    <div class="conf-row">
+                        <span class="conf-label">Student Name:</span>
+                        <span class="conf-value font-semibold">{{ lead.student_name }}</span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Exam Goal:</span>
-                        <span class="detail-val">{{ lead.exam_goal }} (Class {{ lead.class_level }})</span>
+                    <div class="conf-row">
+                        <span class="conf-label">Exam Goal:</span>
+                        <span class="conf-value">
+                            <span class="badge badge-goal">{{ lead.exam_goal }}</span> &bull; Class {{ lead.class_level }}
+                        </span>
                     </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Interested Course:</span>
-                        <span class="detail-val">{{ lead.interested_course }}</span>
+                    <div class="conf-row">
+                        <span class="conf-label">Interested Course:</span>
+                        <span class="conf-value font-semibold">{{ lead.interested_course }}</span>
                     </div>
                 </div>
 
                 {% if existing_booking %}
                     <!-- Existing Active Demo Appointment Details -->
-                    <div class="existing-booking-highlight-card">
-                        <div class="booking-card-top">
+                    <div class="meeting-link-card">
+                        <div class="demo-link-badge-row" style="margin-bottom: 0.75rem;">
                             <span class="badge badge-success">&#128197; Confirmed Demo Appointment</span>
                             <span class="badge badge-status-{{ existing_booking.booking_status|lower|replace(' ', '-') }}">Status: {{ existing_booking.booking_status }}</span>
                         </div>
-                        <div class="booking-schedule-row">
-                            <div class="schedule-item">
-                                <span class="schedule-label">Demo Date</span>
-                                <span class="schedule-value">{{ formatted_demo_date or existing_booking.demo_date }}</span>
+                        <div class="conf-summary-box" style="margin-bottom: 1rem;">
+                            <div class="conf-row highlight-row">
+                                <span class="conf-label">Demo Date:</span>
+                                <span class="conf-value highlight-date">{{ formatted_demo_date or existing_booking.demo_date }}</span>
                             </div>
-                            <div class="schedule-item">
-                                <span class="schedule-label">Time Slot (IST)</span>
-                                <span class="schedule-value">{{ formatted_demo_time or slot_labels.get(existing_booking.slot_time, existing_booking.slot_time) }}</span>
+                            <div class="conf-row highlight-row">
+                                <span class="conf-label">Time Slot (IST):</span>
+                                <span class="conf-value highlight-time">{{ formatted_demo_time or slot_labels.get(existing_booking.slot_time, existing_booking.slot_time) }}</span>
                             </div>
                         </div>
 
                         {% if booking_meeting_url %}
-                            <div class="meeting-callout-box">
-                                <div class="meeting-callout-header">
-                                    <span class="meeting-icon">&#127916;</span>
-                                    <div>
-                                        <h3 class="meeting-heading">Live Demo Class Meeting Link</h3>
-                                        <p class="meeting-sub">Join your 1-on-1 demo session using the link below at your scheduled time.</p>
-                                    </div>
+                            <div class="meeting-callout-header">
+                                <span class="neu-icon-wrap" style="width: 36px; height: 36px; font-size: 1rem;">&#127916;</span>
+                                <div>
+                                    <h3 class="meeting-heading">Live Demo Class Meeting Link</h3>
+                                    <p class="meeting-sub">Join your 1-on-1 demo session using the link below at your scheduled appointment time.</p>
                                 </div>
-                                <div class="meeting-input-row">
-                                    <input type="text" readonly value="{{ booking_meeting_url }}" id="demo-meeting-link-input" class="form-control meeting-url-input">
-                                    <a href="{{ booking_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-meeting">
-                                        Join Meeting &rarr;
-                                    </a>
-                                </div>
+                            </div>
+                            <div class="meeting-url-box">
+                                <input type="text" readonly value="{{ booking_meeting_url }}" id="demo-meeting-link-input" class="form-control">
+                                <button type="button" class="btn btn-outline" onclick="navigator.clipboard.writeText('{{ booking_meeting_url }}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 2000);">
+                                    Copy
+                                </button>
+                                <a href="{{ booking_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-meeting">
+                                    Join Meeting &rarr;
+                                </a>
                             </div>
                         {% endif %}
                     </div>
 
-                    <div class="status-actions">
+                    <div class="conf-actions">
                         {% if booking_token %}
                             <a href="{{ url_for('booking.select_slot', token=booking_token) }}" class="btn btn-outline" id="btn-reschedule-booking">
                                 Reschedule Demo Slot
@@ -80,12 +87,13 @@
                     </div>
                 {% else %}
                     <!-- No Demo Booked Yet -->
-                    <div class="next-step-callout">
-                        <h3>Reserve Your Free Demo Session</h3>
-                        <p>You have registered your enquiry, but have not picked a demo class time yet. Book your preferred slot below.</p>
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem; text-align: left;">
+                        <div>
+                            <strong>Demo Class Pending:</strong> Your admissions enquiry has been registered, but you have not yet picked your demo class time. Please reserve your slot below.
+                        </div>
                     </div>
 
-                    <div class="status-actions">
+                    <div class="conf-actions">
                         {% if booking_token %}
                             <a href="{{ url_for('booking.select_slot', token=booking_token) }}" class="btn btn-primary btn-lg" id="btn-proceed-booking">
                                 Select Demo Slot Now &rarr;
@@ -97,78 +105,48 @@
                     </div>
                 {% endif %}
             </div>
-
-        {% elif success %}
-            <!-- New Enquiry Success -->
-            <div class="card status-card card-success">
-                <div class="status-icon success-icon">&#10003;</div>
-                <h1 class="status-title">Enquiry Successfully Registered!</h1>
-                <p class="status-message">
-                    Thank you, <strong>{{ lead.student_name }}</strong>. Your admission enquiry has been saved to the KMIE admissions database.
+        {% else %}
+            <!-- First-time Submission Success: Proceed to Slot Selection -->
+            <div class="card status-card">
+                <div class="conf-badge-wrapper">
+                    <div class="conf-badge">
+                        &#10003;
+                    </div>
+                </div>
+                <h1 class="conf-title">Enquiry Registered Successfully!</h1>
+                <p class="conf-subtitle">
+                    Thank you, <strong>{{ lead.student_name }}</strong>. Your details have been recorded in the KMIE admissions database.
                 </p>
 
-                <!-- Sync status badge -->
-                <div class="sync-indicator">
-                    {% if lead.sheet_sync_status == 'synced' %}
-                        <span class="badge badge-success">
-                            &#10003; Google Sheets Synchronized
-                        </span>
-                    {% else %}
-                        <span class="badge badge-pending">
-                            &#9203; Enquiry Saved &bull; Google Sheets Sync Queued
-                        </span>
+                <div class="conf-summary-box">
+                    <div class="conf-row">
+                        <span class="conf-label">Target Exam:</span>
+                        <span class="conf-value"><span class="badge badge-goal">{{ lead.exam_goal }}</span> &bull; Class {{ lead.class_level }}</span>
+                    </div>
+                    <div class="conf-row">
+                        <span class="conf-label">Course:</span>
+                        <span class="conf-value font-semibold">{{ lead.interested_course }}</span>
+                    </div>
+                    <div class="conf-row">
+                        <span class="conf-label">Registered Phone:</span>
+                        <span class="conf-value monospace">{{ masked_phone }}</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-success" style="margin-bottom: 1.5rem; text-align: left;">
+                    <div>
+                        <strong>Next Step:</strong> Choose your preferred date and time slot for your free 1-on-1 demo session with our senior faculty.
+                    </div>
+                </div>
+
+                <div class="conf-actions">
+                    {% if booking_token %}
+                        <a href="{{ url_for('booking.select_slot', token=booking_token) }}" class="btn btn-primary btn-lg" id="btn-proceed-to-slot">
+                            Select Demo Slot Now &rarr;
+                        </a>
                     {% endif %}
-                </div>
-
-                <div class="details-box">
-                    <div class="detail-row">
-                        <span class="detail-label">Enquiry Reference ID:</span>
-                        <span class="detail-val monospace">{{ lead.id[:8] }}...</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Student Name:</span>
-                        <span class="detail-val">{{ lead.student_name }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Contact Phone:</span>
-                        <span class="detail-val">{{ masked_phone }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Email:</span>
-                        <span class="detail-val">{{ lead.email }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Class &amp; Goal:</span>
-                        <span class="detail-val">Class {{ lead.class_level }} &bull; {{ lead.exam_goal }}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Course:</span>
-                        <span class="detail-val">{{ lead.interested_course }}</span>
-                    </div>
-                </div>
-
-                <div class="next-step-callout">
-                    <h3>Next Step: Reserve Your Free Demo Class</h3>
-                    <p>Select your preferred date and time slot to confirm your seat with our subject faculty.</p>
-                </div>
-
-                <div class="status-actions">
-                    <a href="{{ url_for('booking.select_slot', token=booking_token) }}" class="btn btn-primary btn-lg" id="btn-proceed-booking">
-                        Book Your Demo Class Now &rarr;
-                    </a>
-                </div>
-            </div>
-
-        {% else %}
-            <!-- Submission Problem -->
-            <div class="card status-card card-danger">
-                <div class="status-icon danger-icon">&#9888;</div>
-                <h1 class="status-title">Submission Could Not Be Completed</h1>
-                <p class="status-message">{{ message or "An error occurred while saving your enquiry." }}</p>
-
-                <div class="status-actions">
-                    <a href="{{ url_for('public.index') }}" class="btn btn-primary" id="btn-retry-enquiry">
-                        Return to Enquiry Form
+                    <a href="{{ url_for('public.index') }}" class="btn btn-ghost" id="btn-home-return">
+                        Back to Home
                     </a>
                 </div>
             </div>

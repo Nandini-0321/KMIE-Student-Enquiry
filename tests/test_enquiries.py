@@ -181,3 +181,91 @@ class TestStudentEnquiries:
             })
             assert ok is False
             assert "Automated submission rejected" in err
+
+    def test_only_indian_phone_numbers_accepted(self, app):
+        """Verifies that only valid Indian phone numbers (+91) are accepted for student enquiries."""
+        with app.app_context():
+            # US number rejected
+            ok_us, err_us, _ = validate_enquiry_payload({
+                "student_name": "International Student",
+                "phone_number": "+1 202-555-0101",
+                "email": "student@example.com",
+                "class_level": "11",
+                "exam_goal": "NEET",
+                "interested_course": "NEET Long-Term Preparation",
+            })
+            assert ok_us is False
+            assert "Only Indian phone numbers" in err_us
+
+            # UK number rejected
+            ok_uk, err_uk, _ = validate_enquiry_payload({
+                "student_name": "UK Student",
+                "phone_number": "+44 20 7946 0919",
+                "email": "student2@example.com",
+                "class_level": "12",
+                "exam_goal": "JEE",
+                "interested_course": "JEE Main Preparation",
+            })
+            assert ok_uk is False
+            assert "Only Indian phone numbers" in err_uk
+
+            # Valid Indian mobile number (starts with 6-9) accepted
+            ok_in, err_in, val_in = validate_enquiry_payload({
+                "student_name": "Indian Student",
+                "phone_number": "9876543210",
+                "email": "student.in@example.com",
+                "class_level": "11",
+                "exam_goal": "NEET",
+                "interested_course": "NEET Long-Term Preparation",
+            })
+            assert ok_in is True
+            assert val_in["phone_e164"] == "+919876543210"
+
+    def test_exam_goal_course_validation(self, app):
+        """Verifies that interested courses must match the selected target exam goal."""
+        with app.app_context():
+            # Mismatched: NEET goal with JEE Advanced course
+            ok_mismatch, err_mismatch, _ = validate_enquiry_payload({
+                "student_name": "Pooja Sharma",
+                "phone_number": "9876543210",
+                "email": "pooja@example.com",
+                "class_level": "12",
+                "exam_goal": "NEET",
+                "interested_course": "JEE Advanced Preparation",
+            })
+            assert ok_mismatch is False
+            assert "does not match your target exam goal (NEET)" in err_mismatch
+
+            # Mismatched: JEE goal with NEET Long-Term course
+            ok_mismatch2, err_mismatch2, _ = validate_enquiry_payload({
+                "student_name": "Karan Singhania",
+                "phone_number": "9876543210",
+                "email": "karan@example.com",
+                "class_level": "11",
+                "exam_goal": "JEE",
+                "interested_course": "NEET Long-Term Preparation",
+            })
+            assert ok_mismatch2 is False
+            assert "does not match your target exam goal (JEE)" in err_mismatch2
+
+            # Valid: NEET goal with NEET course
+            ok_valid_neet, _, _ = validate_enquiry_payload({
+                "student_name": "Pooja Sharma",
+                "phone_number": "9876543210",
+                "email": "pooja@example.com",
+                "class_level": "12",
+                "exam_goal": "NEET",
+                "interested_course": "NEET Long-Term Preparation",
+            })
+            assert ok_valid_neet is True
+
+            # Valid: JEE goal with JEE course
+            ok_valid_jee, _, _ = validate_enquiry_payload({
+                "student_name": "Karan Singhania",
+                "phone_number": "9876543210",
+                "email": "karan@example.com",
+                "class_level": "11",
+                "exam_goal": "JEE",
+                "interested_course": "JEE Advanced Preparation",
+            })
+            assert ok_valid_jee is True

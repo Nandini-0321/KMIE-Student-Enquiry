@@ -3,36 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}KMIE - Student Enquiry & Demo Booking{% endblock %}</title>
-    <meta name="description" content="Komali Mam Institute of Excellence (KMIE) - NEET & JEE Admissions Enquiry and Demo Class Booking Automation.">
-    <!-- Modern Google Font -->
+    <title>{% block title %}KMIE - Student Course Enquiry &amp; Demo Booking{% endblock %}</title>
+    <meta name="description" content="Komali Mam Institute of Excellence (KMIE) - Specialized NEET &amp; JEE Admissions Enquiry and Demo Class Booking Automation Platform.">
+    <!-- Modern Typography: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <!-- Top Navigation -->
+    <!-- Top Glass Navigation Bar -->
     <header class="app-header">
         <div class="header-container">
             <a href="{{ url_for('public.index') }}" class="brand-logo" id="nav-brand">
                 <div class="brand-icon">K</div>
                 <div class="brand-text">
-                    <span class="brand-name">KMIE</span>
-                    <span class="brand-subtitle">Excellence in NEET & JEE</span>
+                    <span class="brand-name">
+                        KMIE
+                        <span class="brand-badge">Admissions</span>
+                    </span>
+                    <span class="brand-subtitle">Excellence in NEET &amp; JEE</span>
                 </div>
             </a>
             <nav class="nav-links">
-                <a href="{{ url_for('public.index') }}" class="nav-link" id="nav-enquiry">Student Enquiry</a>
+                <a href="{{ url_for('public.index') }}" class="nav-link {% if request.endpoint == 'public.index' %}active{% endif %}" id="nav-enquiry">
+                    Student Enquiry
+                </a>
                 {% if session.get('is_admin') %}
-                    <a href="{{ url_for('admin.dashboard') }}" class="nav-link admin-tag" id="nav-admin-dashboard">Admin Dashboard</a>
+                    <a href="{{ url_for('admin.dashboard') }}" class="nav-link admin-tag {% if request.endpoint == 'admin.dashboard' %}active{% endif %}" id="nav-admin-dashboard">
+                        Admin Dashboard
+                    </a>
                     <form action="{{ url_for('admin.logout') }}" method="POST" class="inline-form">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="btn btn-outline-sm" id="btn-admin-logout">Sign Out</button>
                     </form>
                 {% else %}
-                    <a href="{{ url_for('admin.login') }}" class="nav-link subtle-link" id="nav-admin-login">Admin Login</a>
+                    <a href="{{ url_for('admin.login') }}" class="nav-link subtle-link {% if request.endpoint == 'admin.login' %}active{% endif %}" id="nav-admin-login">
+                        Admin Login
+                    </a>
                 {% endif %}
             </nav>
         </div>
@@ -46,7 +55,7 @@
                     {% for category, message in messages %}
                         <div class="alert alert-{{ category }}" role="alert">
                             <span class="alert-text">{{ message }}</span>
-                            <button type="button" class="alert-close" onclick="this.parentElement.remove();">&times;</button>
+                            <button type="button" class="alert-close" onclick="this.parentElement.remove();" aria-label="Close notification">&times;</button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -56,14 +65,14 @@
         {% block content %}{% endblock %}
     </main>
 
-    <!-- Footer -->
+    <!-- App Footer -->
     <footer class="app-footer">
         <div class="footer-container">
             <div class="footer-col">
                 <div class="footer-brand">
                     <strong>Komali Mam Institute of Excellence (KMIE)</strong>
                 </div>
-                <p class="footer-desc">Specialized coaching academy empowering aspirants to achieve top ranks in NEET & JEE.</p>
+                <p class="footer-desc">Specialized coaching academy empowering aspirants to achieve top ranks in NEET &amp; JEE.</p>
             </div>
             <div class="footer-col footer-meta">
                 <p>&copy; {{ current_year }} KMIE Automation Assessment. Built for demonstration.</p>

@@ -33,9 +33,9 @@ def validate_enquiry_payload(form_data: Dict[str, Any]) -> Tuple[bool, Optional[
     if len(name) > 100:
         return False, "Student Name must not exceed 100 characters.", None
 
-    # 3. Phone Number & Normalization
+    # 3. Phone Number & Normalization (Strict Indian phone enforcement)
     raw_phone = form_data.get("phone_number", "").strip()
-    is_valid_phone, phone_e164, _ = normalize_phone_number(raw_phone)
+    is_valid_phone, phone_e164, _ = normalize_phone_number(raw_phone, require_indian=True)
     if not is_valid_phone:
         return False, phone_e164, None  # phone_e164 holds error message if invalid
 
@@ -61,11 +61,17 @@ def validate_enquiry_payload(form_data: Dict[str, Any]) -> Tuple[bool, Optional[
     if exam_goal not in allowed_goals:
         return False, f"Exam goal must be one of: {', '.join(allowed_goals)}.", None
 
-    # 7. Interested Course validation
+    # 7. Interested Course validation (must match target exam goal)
     interested_course = form_data.get("interested_course", "").strip()
     course_options = current_app.config.get("COURSE_OPTIONS", [])
     if interested_course not in course_options:
         return False, "Please select a valid course option from the list.", None
+
+    exam_courses = current_app.config.get("EXAM_COURSES", {})
+    allowed_for_goal = exam_courses.get(exam_goal, [])
+    # If the course is goal-specific, make sure it matches the selected goal
+    if allowed_for_goal and interested_course not in allowed_for_goal and interested_course not in ["Foundation Course", "Other"]:
+        return False, f"Selected course '{interested_course}' does not match your target exam goal ({exam_goal}). Please choose a {exam_goal} course.", None
 
     validated = {
         "student_name": name,

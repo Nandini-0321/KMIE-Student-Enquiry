@@ -43,11 +43,33 @@ class Config:
     BOOKING_TOKEN_MAX_AGE_SECONDS = int(os.getenv("BOOKING_TOKEN_MAX_AGE_SECONDS", "7200"))
     
     # Business Rules & Configurable Choices
+    EXAM_COURSES: Dict[str, List[str]] = {
+        "NEET": [
+            "NEET Long-Term Preparation",
+            "NEET Crash Course",
+            "NEET Test Series & Rank Booster",
+            "Foundation Course (Medical)",
+            "Other",
+        ],
+        "JEE": [
+            "JEE Main Preparation",
+            "JEE Advanced Preparation",
+            "JEE Crash Course",
+            "Foundation Course (Engineering)",
+            "Other",
+        ],
+    }
+
+    # Master list of all allowed courses
     COURSE_OPTIONS: List[str] = [
         "NEET Long-Term Preparation",
         "NEET Crash Course",
+        "NEET Test Series & Rank Booster",
+        "Foundation Course (Medical)",
         "JEE Main Preparation",
         "JEE Advanced Preparation",
+        "JEE Crash Course",
+        "Foundation Course (Engineering)",
         "Foundation Course",
         "Other",
     ]

@@ -7,35 +7,38 @@
     <div class="booking-card-wrapper">
         <div class="card booking-form-card">
             <div class="booking-header">
-                <span class="badge-pill">Step 2 of 2: Appointment</span>
+                <span class="badge-pill">Step 2 of 2: Demo Appointment</span>
                 <h1 class="card-title">Schedule Your Live Demo Session</h1>
                 <p class="card-subtitle">
-                    Select your preferred date and session time slot for <strong>{{ lead.student_name }}</strong>.
+                    Select your preferred date and time slot for <strong>{{ lead.student_name }}</strong> ({{ lead.exam_goal }} &bull; Class {{ lead.class_level }}).
                 </p>
             </div>
 
             {% if existing_booking %}
-                <div class="info-banner">
-                    <div class="info-banner-icon">&#9432;</div>
-                    <div class="info-banner-text">
-                        <strong>Current Booking Active:</strong> You currently have a demo slot reserved on 
-                        <span class="highlight-text">{{ existing_booking.demo_date }}</span> at 
-                        <span class="highlight-text">{{ slot_labels.get(existing_booking.slot_time, existing_booking.slot_time) }}</span>.
-                        Submitting a new selection below will <em>reschedule</em> your existing booking.
+                <!-- Active Demo Booking Banner -->
+                <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                        <span style="font-size: 1.25rem;">&#9432;</span>
+                        <div>
+                            <strong>Current Booking Active:</strong> You currently have a demo slot reserved on 
+                            <strong>{{ existing_booking.demo_date }}</strong> at 
+                            <strong>{{ slot_labels.get(existing_booking.slot_time, existing_booking.slot_time) }}</strong>.
+                            Picking a new slot below will reschedule your existing reservation.
+                        </div>
                     </div>
                 </div>
 
                 {% if booking_meeting_url %}
                     <div class="card existing-booking-card-mini">
                         <div class="meeting-callout-header">
-                            <span class="meeting-icon">&#127916;</span>
+                            <span class="neu-icon-wrap" style="width: 36px; height: 36px; font-size: 1rem;">&#127916;</span>
                             <div>
                                 <h3 class="meeting-heading">Your Active Demo Session Link</h3>
-                                <p class="meeting-sub">You can join using this link at your scheduled time or pick a new slot below to reschedule.</p>
+                                <p class="meeting-sub">You can join using this link at your scheduled time or select a new date below to reschedule.</p>
                             </div>
                         </div>
                         <div class="meeting-input-row">
-                            <input type="text" readonly value="{{ booking_meeting_url }}" class="form-control meeting-url-input" id="active-booking-meeting-url">
+                            <input type="text" readonly value="{{ booking_meeting_url }}" class="form-control" id="active-booking-meeting-url">
                             <a href="{{ booking_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-current-meeting">
                                 Join Meeting &rarr;
                             </a>
@@ -62,10 +65,10 @@
                         value="{{ existing_booking.demo_date if existing_booking else min_date }}"
                         required
                     >
-                    <span class="form-hint">All dates are scheduled according to India Standard Time (IST). Past dates are disabled.</span>
+                    <span class="form-hint">All appointments follow India Standard Time (IST). Past dates are automatically disabled.</span>
                 </div>
 
-                <!-- Time Slot Selection -->
+                <!-- Time Slot Selection with Neumorphic Cards -->
                 <div class="form-group">
                     <label class="form-label">
                         Select Demo Time Slot <span class="required-star">*</span>
@@ -83,28 +86,28 @@
                                 >
                                 <span class="slot-card-inner">
                                     <span class="slot-time-text">{{ slot_labels.get(slot, slot) }}</span>
-                                    <span class="slot-24h">Slot code: {{ slot }}</span>
+                                    <span class="slot-24h">Slot code: {{ slot }} IST</span>
                                 </span>
                             </label>
                         {% endfor %}
                     </div>
+                    <span class="form-hint">1-on-1 personalized academic demo with live interactive doubt solving.</span>
                 </div>
 
                 <!-- Booking Action Button -->
-                <div class="form-actions">
+                <div class="form-actions" style="margin-top: 2rem;">
                     <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-confirm-booking">
                         <span class="btn-text">
-                            {% if existing_booking %}Reschedule Demo Slot{% else %}Confirm Demo Class Booking{% endif %}
+                            {% if existing_booking %}Confirm Rescheduled Slot &rarr;{% else %}Confirm Demo Class Booking &rarr;{% endif %}
                         </span>
                         <span class="spinner" style="display:none;"></span>
                     </button>
                 </div>
-            </form>
-        </div>
 
-        <!-- Guidance note -->
-        <div class="booking-footer-note">
-            <p>Need to modify your appointment later? You can return to this page anytime using your booking link or contact KMIE administration.</p>
+                <div style="text-align: center; margin-top: 1rem;">
+                    <a href="{{ url_for('public.index') }}" class="subtle-link text-xs">&larr; Return to Student Portal</a>
+                </div>
+            </form>
         </div>
     </div>
 </div>

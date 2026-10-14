@@ -19,12 +19,14 @@ def index():
     courses = current_app.config.get("COURSE_OPTIONS", [])
     classes = current_app.config.get("ALLOWED_CLASSES", ["11", "12"])
     exam_goals = current_app.config.get("ALLOWED_EXAM_GOALS", ["NEET", "JEE"])
+    exam_courses = current_app.config.get("EXAM_COURSES", {})
 
     return render_template(
         "index.html",
         courses=courses,
         classes=classes,
         exam_goals=exam_goals,
+        exam_courses=exam_courses,
         form_data={},
     )
 
@@ -52,6 +54,7 @@ def submit_enquiry():
             courses=current_app.config.get("COURSE_OPTIONS", []),
             classes=current_app.config.get("ALLOWED_CLASSES", ["11", "12"]),
             exam_goals=current_app.config.get("ALLOWED_EXAM_GOALS", ["NEET", "JEE"]),
+            exam_courses=current_app.config.get("EXAM_COURSES", {}),
             form_data=form_data,
             error_message=message,
         ), 400
@@ -104,7 +107,7 @@ def check_status():
         return redirect(url_for("public.index"))
 
     phone_input = request.form.get("phone_number", "").strip()
-    is_valid, phone_e164, err_msg = normalize_phone_number(phone_input)
+    is_valid, phone_e164, err_msg = normalize_phone_number(phone_input, require_indian=True)
 
     if not is_valid or not phone_e164:
         flash(err_msg or "Please enter a valid phone number to check your demo status.", "warning")

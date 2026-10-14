@@ -1,58 +1,75 @@
 {% extends "base.html" %}
 
-{% block title %}KMIE - Student Course Enquiry & Demo Booking{% endblock %}
+{% block title %}KMIE - Student Course Enquiry &amp; Demo Booking{% endblock %}
 
 {% block content %}
 <div class="page-container enquiry-page">
+    <!-- Hero Header -->
     <div class="hero-section">
-        <span class="badge-pill">Admissions 2026–2027</span>
-        <h1 class="hero-title">Start Your Journey Towards NEET & JEE Excellence</h1>
-        <p class="hero-subtitle">
-            Submit your enquiry below to speak with an academic counsellor and secure a free 1-on-1 demo class with KMIE faculty.
+        <div class="hero-pill">
+            <span>&#127891;</span> Admissions 2026–2027 Academic Session
+        </div>
+        <h1 class="hero-title">
+            Unlock Top Ranks in <span class="gradient-text">NEET &amp; JEE</span>
+        </h1>
+        <p class="hero-desc">
+            Experience elite classroom training and personal mentorship with KMIE. Register below to reserve your complimentary 1-on-1 demo session with our senior faculty.
         </p>
     </div>
 
-    <!-- Quick Check: Student Demo Booking & Meeting Link Lookup -->
+    <!-- Quick Status / Existing Booking Lookup Card -->
     <div class="card check-status-card" id="check-status-banner">
-        <div class="check-status-info">
-            <span class="badge badge-success">&#127916; Already Booked a Demo?</span>
-            <div class="check-status-text">
-                <strong>Find Your Demo Class Meeting Link &amp; Scheduled Slot</strong>
-                <span class="text-muted text-xs">Enter your registered mobile number to see your appointment and Zoom/Meet session link.</span>
-            </div>
+        <div class="demo-link-badge-row">
+            <span class="badge badge-success">&#127916; Already Registered?</span>
+            <span class="text-xs text-muted">Retrieve your confirmed demo appointment &amp; meeting link</span>
         </div>
-        <form action="{{ url_for('public.check_status') }}" method="POST" class="check-status-form">
+        <form action="{{ url_for('public.check_status') }}" method="POST" class="demo-link-form" id="check-status-form">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <div class="check-status-input-row">
-                <input 
-                    type="tel" 
-                    name="phone_number" 
-                    placeholder="e.g. 9876543210" 
-                    class="form-control form-control-sm" 
-                    required
-                    id="check-status-phone-input"
-                >
-                <button type="submit" class="btn btn-primary btn-sm" id="btn-check-my-status">
-                    View My Demo Link &rarr;
+            <div class="demo-link-input-group">
+                <div class="input-with-prefix" style="flex: 1;">
+                    <div class="phone-country-addon">
+                        <span class="phone-flag">&#127470;&#127475;</span>
+                        <span>+91</span>
+                    </div>
+                    <input 
+                        type="tel" 
+                        name="phone_number" 
+                        id="check-status-phone-input" 
+                        placeholder="Enter registered 10-digit mobile number" 
+                        class="form-control" 
+                        required
+                        maxlength="14"
+                        autocomplete="tel"
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary" id="btn-check-my-status">
+                    Find Demo Link &rarr;
                 </button>
+            </div>
+            <div class="demo-link-status-bar">
+                <span class="text-xs text-muted">&#9432; Only Indian phone numbers (+91) registered in KMIE database can be retrieved.</span>
             </div>
         </form>
     </div>
 
-    <div class="content-grid">
-        <!-- Main Form Card -->
-        <div class="card form-card">
-            <div class="card-header">
-                <h2 class="card-title">Student Enquiry Form</h2>
-                <p class="card-subtitle">Fill in your details accurately to register your interest.</p>
+    <!-- Main Grid: Enquiry Form + Value Proposition -->
+    <div class="enquiry-layout" style="margin-top: 2rem;">
+        <!-- Form Glass Card -->
+        <div class="card enquiry-card">
+            <div class="enquiry-form-header">
+                <span class="badge-pill">Step 1 of 2: Student Enquiry</span>
+                <h2 class="card-title">Student Admissions Enquiry</h2>
+                <p class="card-subtitle">
+                    Complete the form below. Once registered, you will immediately choose your preferred demo slot.
+                </p>
             </div>
 
             <form action="{{ url_for('public.submit_enquiry') }}" method="POST" id="enquiry-form" class="enquiry-form" novalidate>
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-                <!-- Anti-Spam Honeypot Field (hidden from real users) -->
-                <div class="form-group honeypot-field" style="display:none;" aria-hidden="true">
-                    <label for="website_url_check">Do not fill this field</label>
+                <!-- Anti-Spam Honeypot Field -->
+                <div class="honeypot-field" style="display:none;" aria-hidden="true">
+                    <label for="website_url_check">Leave empty</label>
                     <input type="text" name="website_url_check" id="website_url_check" tabindex="-1" autocomplete="off">
                 </div>
 
@@ -73,27 +90,32 @@
                         maxlength="100"
                         autocomplete="name"
                     >
-                    <span class="form-hint">Enter the student's legal name.</span>
+                    <span class="form-hint">Enter the student's legal name as in school records.</span>
                 </div>
 
-                <!-- 2. Phone Number -->
+                <!-- 2. Indian Phone Number (Enforced +91) -->
                 <div class="form-group">
                     <label for="phone_number" class="form-label">
-                        Contact Phone Number <span class="required-star">*</span>
+                        Mobile Number (India) <span class="required-star">*</span>
                     </label>
                     <div class="input-with-prefix">
+                        <div class="phone-country-addon" title="India (+91)">
+                            <span class="phone-flag">&#127470;&#127475;</span>
+                            <span>+91</span>
+                        </div>
                         <input 
                             type="tel" 
                             name="phone_number" 
                             id="phone_number" 
                             class="form-control" 
-                            placeholder="e.g. 9876543210 or +91 98765 43210" 
+                            placeholder="98765 43210" 
                             value="{{ form_data.get('phone_number', '') }}"
                             required
+                            maxlength="16"
                             autocomplete="tel"
                         >
                     </div>
-                    <span class="form-hint">Indian 10-digit mobile or international number with country code. Used for duplicate check.</span>
+                    <span class="form-hint">Only Indian 10-digit mobile numbers are supported (+91). Identical phone numbers prevent duplicate profiles.</span>
                 </div>
 
                 <!-- 3. Email Address -->
@@ -111,7 +133,7 @@
                         required
                         autocomplete="email"
                     >
-                    <span class="form-hint">We will share session details and confirmations to this email.</span>
+                    <span class="form-hint">Confirmation and meeting links will also be sent to this email.</span>
                 </div>
 
                 <div class="form-row two-cols">
@@ -128,7 +150,7 @@
                         </select>
                     </div>
 
-                    <!-- 5. Exam Goal -->
+                    <!-- 5. Target Exam Goal (Controls Dynamic Course Filtering) -->
                     <div class="form-group">
                         <label for="exam_goal" class="form-label">
                             Target Exam Goal <span class="required-star">*</span>
@@ -136,77 +158,105 @@
                         <select name="exam_goal" id="exam_goal" class="form-select" required>
                             <option value="" disabled {% if not form_data.get('exam_goal') %}selected{% endif %}>Select Exam Goal</option>
                             {% for g in exam_goals %}
-                                <option value="{{ g }}" {% if form_data.get('exam_goal') == g %}selected{% endif %}>{{ g }} (Engineering / Medical)</option>
+                                <option value="{{ g }}" {% if form_data.get('exam_goal') == g %}selected{% endif %}>
+                                    {{ g }} {% if g == 'NEET' %}(Medical){% elif g == 'JEE' %}(Engineering){% endif %}
+                                </option>
                             {% endfor %}
                         </select>
+                        <span class="form-hint">Select NEET or JEE to view dedicated courses.</span>
                     </div>
                 </div>
 
-                <!-- 6. Interested Course -->
+                <!-- 6. Interested Course (Dynamically Filtered Based on Exam Goal) -->
                 <div class="form-group">
                     <label for="interested_course" class="form-label">
                         Interested Course <span class="required-star">*</span>
                     </label>
                     <select name="interested_course" id="interested_course" class="form-select" required>
-                        <option value="" disabled {% if not form_data.get('interested_course') %}selected{% endif %}>Select Course of Interest</option>
+                        <option value="" disabled {% if not form_data.get('interested_course') %}selected{% endif %}>
+                            {% if form_data.get('exam_goal') %}Select Course of Interest{% else %}-- Please select Target Exam Goal first --{% endif %}
+                        </option>
                         {% for course in courses %}
-                            <option value="{{ course }}" {% if form_data.get('interested_course') == course %}selected{% endif %}>{{ course }}</option>
+                            <option value="{{ course }}" {% if form_data.get('interested_course') == course %}selected{% endif %}>
+                                {{ course }}
+                            </option>
                         {% endfor %}
                     </select>
+                    <span class="form-hint" id="course-filter-hint">Courses are tailored to your selected Target Exam Goal.</span>
                 </div>
 
-                <!-- Submit Button -->
-                <div class="form-actions">
+                <!-- Submit Button with Spinner -->
+                <div class="form-actions" style="margin-top: 1.5rem;">
                     <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-submit-enquiry">
-                        <span class="btn-text">Submit Enquiry &amp; Proceed to Demo Slot</span>
+                        <span class="btn-text">Submit Enquiry &amp; Proceed to Demo Slot &rarr;</span>
                         <span class="spinner" style="display:none;"></span>
                     </button>
                 </div>
 
                 <p class="privacy-note">
-                    Your details are securely stored in our admissions database. Duplicate submissions with identical phone numbers are automatically linked.
+                    &#128274; Your contact data is strictly confidential. E.164 normalization automatically associates existing enquiries without duplicate entries.
                 </p>
             </form>
         </div>
 
-        <!-- Sidebar / Value Proposition Info -->
+        <!-- Sidebar / Value Proposition -->
         <aside class="sidebar-info">
             <div class="card info-card">
-                <h3 class="info-card-title">Why Learn with KMIE?</h3>
+                <h3 class="info-card-title">&#10024; Why Study at KMIE?</h3>
                 <ul class="benefit-list">
                     <li class="benefit-item">
                         <div class="benefit-icon">&#10003;</div>
                         <div class="benefit-text">
-                            <strong>Personalized Mentorship:</strong> Small batches with direct doubt clearing by expert mentors.
+                            <strong>Personalized 1-on-1 Mentorship:</strong> Direct doubt resolution with master educators and individual academic tracking.
                         </div>
                     </li>
                     <li class="benefit-item">
                         <div class="benefit-icon">&#10003;</div>
                         <div class="benefit-text">
-                            <strong>Comprehensive Curriculum:</strong> Rigorous NEET &amp; JEE question banks, mock exams, and analytics.
+                            <strong>Targeted NEET &amp; JEE Pedagogy:</strong> Curated high-yield test series, daily problem sheets, and national mock percentiles.
                         </div>
                     </li>
                     <li class="benefit-item">
                         <div class="benefit-icon">&#10003;</div>
                         <div class="benefit-text">
-                            <strong>Free Demo Booking:</strong> Immediately schedule a live demo session upon enquiry submission.
+                            <strong>Instant Demo Class Scheduling:</strong> Directly reserve one of our 4 fixed daily demo slots after registration.
+                        </div>
+                    </li>
+                    <li class="benefit-item">
+                        <div class="benefit-icon">&#10003;</div>
+                        <div class="benefit-text">
+                            <strong>Instant Access:</strong> Real-time meeting link provided on confirmation screen.
                         </div>
                     </li>
                 </ul>
             </div>
 
-            <div class="card highlight-card">
-                <div class="badge-mini">Immediate Demo Booking</div>
-                <h4 class="highlight-title">4 Daily Demo Time Slots</h4>
-                <p class="highlight-desc">Choose from convenient afternoon and evening slots: 1:00 PM, 3:00 PM, 5:00 PM, or 7:00 PM IST.</p>
-                <div class="slot-chips">
-                    <span class="chip">1:00 PM</span>
-                    <span class="chip">3:00 PM</span>
-                    <span class="chip">5:00 PM</span>
-                    <span class="chip">7:00 PM</span>
+            <!-- Demo Slots Summary Card -->
+            <div class="card info-card" style="background: rgba(255, 255, 255, 0.9);">
+                <div class="demo-link-badge-row">
+                    <span class="badge badge-goal">Demo Timings</span>
+                    <span class="text-xs text-muted">Fixed Daily Slots</span>
+                </div>
+                <h4 style="font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem;">Convenient Daily Slots</h4>
+                <p style="font-size: 0.8rem; color: var(--color-text-secondary); margin-bottom: 0.85rem;">
+                    Sessions are conducted across 4 daily slots in India Standard Time (IST):
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+                    <div class="neu-pill" style="justify-content: center;">1:00 PM IST</div>
+                    <div class="neu-pill" style="justify-content: center;">3:00 PM IST</div>
+                    <div class="neu-pill" style="justify-content: center;">5:00 PM IST</div>
+                    <div class="neu-pill" style="justify-content: center;">7:00 PM IST</div>
                 </div>
             </div>
         </aside>
     </div>
 </div>
+
+<!-- Embedded JSON Data for Dynamic Exam Goal -> Course Mapping -->
+<script id="exam-courses-data" type="application/json">
+{{ exam_courses|tojson }}
+</script>
+<script id="initial-selected-course" type="application/json">
+{{ form_data.get('interested_course', '')|tojson }}
+</script>
 {% endblock %}

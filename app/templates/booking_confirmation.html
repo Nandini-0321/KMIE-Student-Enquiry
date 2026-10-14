@@ -23,11 +23,13 @@
                 </div>
                 <div class="conf-row">
                     <span class="conf-label">Target Goal:</span>
-                    <span class="conf-value">{{ lead.exam_goal }} &bull; Class {{ lead.class_level }}</span>
+                    <span class="conf-value">
+                        <span class="badge badge-goal">{{ lead.exam_goal }}</span> &bull; Class {{ lead.class_level }}
+                    </span>
                 </div>
                 <div class="conf-row">
                     <span class="conf-label">Course:</span>
-                    <span class="conf-value">{{ lead.interested_course }}</span>
+                    <span class="conf-value font-semibold">{{ lead.interested_course }}</span>
                 </div>
                 <div class="conf-row highlight-row">
                     <span class="conf-label">Demo Date:</span>
@@ -47,7 +49,7 @@
                     <span class="conf-label">Spreadsheet Sync:</span>
                     <span class="conf-value">
                         {% if booking.sheet_sync_status == 'synced' %}
-                            <span class="badge badge-success">&#10003; Synced</span>
+                            <span class="badge badge-success">&#10003; Synced to Google Sheets</span>
                         {% else %}
                             <span class="badge badge-pending">&#9203; Queued / Pending</span>
                         {% endif %}
@@ -57,18 +59,21 @@
 
             <!-- Virtual Meeting Session Link Box -->
             <div class="meeting-link-card">
-                <div class="meeting-header">
-                    <span class="meeting-icon">&#127916;</span>
+                <div class="meeting-callout-header">
+                    <span class="neu-icon-wrap" style="width: 38px; height: 38px; font-size: 1.1rem;">&#127916;</span>
                     <div>
                         <h3 class="meeting-heading">Demo Class Meeting Link</h3>
-                        <p class="meeting-sub">Join using the video conferencing link below at your scheduled time.</p>
+                        <p class="meeting-sub">Join your live interactive demo class using the URL below at your scheduled time.</p>
                     </div>
                 </div>
 
                 <div class="meeting-url-box">
-                    <input type="text" readonly value="{{ demo_meeting_url }}" id="meeting-url-input" class="form-control meeting-url-input">
+                    <input type="text" readonly value="{{ demo_meeting_url }}" id="meeting-url-input" class="form-control">
+                    <button type="button" class="btn btn-outline" id="btn-copy-meeting-url" onclick="navigator.clipboard.writeText('{{ demo_meeting_url }}'); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy', 2000);">
+                        Copy
+                    </button>
                     <a href="{{ demo_meeting_url }}" target="_blank" rel="noopener noreferrer" class="btn btn-primary" id="btn-join-meeting">
-                        Open Meeting &rarr;
+                        Join Meeting &rarr;
                     </a>
                 </div>
 
