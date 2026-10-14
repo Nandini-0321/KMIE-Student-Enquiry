@@ -1,10 +1,8 @@
 # KMIE Student Enquiry & Demo Booking Automation
-
 **Assessment:** Komali Mam Institute of Excellence (KMIE) — Second Round Practical Assessment  
 **Candidate:** Nandini R | **Role:** Software Developer & Automation Intern  
 **Max Marks:** 50 | **Time Allowed:** 2 Days  
 
----
 
 ## 1. Project Overview & Problem Statement
 
